@@ -28,9 +28,12 @@ const pictures = [
 import './pages/index.css';
 
 //import { openPopup, closePopup, initialCards } from './components/modal';
+
 import initialCards from './scripts/cards';
+// src/index.js
+
 import { createCard, toggleLike, deleteCard } from './components/card.js';
-import { openPopup, closePopup, closePopupOnEsc, handleCardClick } from './components/modal.js';
+import { openPopup, closePopup, closePopupOnEsc } from './components/modal.js';
 
 // Получение шаблона карточки
 const cardTemplate = document.querySelector('#card-template').content;
@@ -40,7 +43,10 @@ const container = document.querySelector('.content');
 const cardsContainer = container.querySelector('.places__list');
 const editProfilePopup = document.querySelector('.popup_type_edit');
 const newCardPopup = document.querySelector('.popup_type_new-card');
-const imagePopup = document.querySelector('.popup_type_image');
+const imagePopup = document.querySelector('.popup_type_image'); // **Элементы всегда находятся в DOM**
+
+const popupImage = imagePopup.querySelector('.popup__image'); // **Элементы всегда находятся в DOM**
+const popupCaption = imagePopup.querySelector('.popup__caption'); // **Элементы всегда находятся в DOM**
 
 // Кнопки открытия попапов
 const editProfileButton = document.querySelector('.profile__edit-button');
@@ -87,6 +93,14 @@ popups.forEach((popup) => {
     }
   });
 });
+
+// Функция открытия попапа с изображением
+function handleCardClick(name, link) {
+  popupImage.src = link; // **Элементы всегда находятся в DOM**
+  popupImage.alt = name; // **Элементы всегда находятся в DOM**
+  popupCaption.textContent = name; // **Элементы всегда находятся в DOM**
+  openPopup(imagePopup); // **Элементы всегда находятся в DOM**
+}
 
 // Обработчик «отправки» формы редактирования профиля
 formEditProfile.addEventListener('submit', (event) => {
