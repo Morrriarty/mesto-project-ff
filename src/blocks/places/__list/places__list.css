@@ -38,3 +38,10 @@
 .scroll-to-top.visible {
   opacity: 1;
 }
+
+@media screen and (max-width: 1140px) {
+  .scroll-to-top { 
+    bottom: 40px; 
+    right: 185px;
+  }
+}
