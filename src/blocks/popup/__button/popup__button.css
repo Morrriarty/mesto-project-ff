@@ -16,7 +16,10 @@
 
 .popup__button:hover {
   background: rgba(0, 0, 0, 0.8);
+  transition: visibility 0s, background 0.3s;
   cursor: pointer;
+  transform: scale(0.98) translateY(-1px);
+  transition: transform 0.3s ease;
 }
 
 @media screen and (max-width: 568px) {
@@ -25,3 +28,25 @@
     line-height: 17px;
   }
 }
+
+/* Стиль кнопки при пустой форме */
+.popup__button_disabled {
+  background-color: transparent; /* Прозрачный фон */
+  color: #808080; /* Серый текст */
+  border: 1px solid #808080; /* Серая рамка */
+  cursor: default; /* Убираем курсор для неактивной кнопки */
+}
+
+.popup__button_disabled:hover {
+  color: #ffffff; /* Белый текст */
+  background-color: #000000CC; /* Фон остается прозрачным */
+}
+
+/* Стиль кнопки при ошибке валидации */
+.popup__button_invalid {
+  background-color: #000000CC; /* Черный с прозрачностью 80% */
+  color: #ffffff; /* Белый текст */
+  border: none; /* Без рамки */
+  cursor: not-allowed; /* Указываем, что кнопка неактивна */
+}
+

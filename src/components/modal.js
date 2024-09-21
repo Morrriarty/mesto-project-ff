@@ -11,7 +11,7 @@ export function closePopup(popup) {
   document.removeEventListener('keydown', closePopupOnEsc);
 }
 
-// Функция для закрытия попапа при нажатии на клавишу Esc
+// Функция для закрытия попапа при нажатии клавиши Esc
 export function closePopupOnEsc(event) {
   if (event.key === 'Escape') {
     const openedPopup = document.querySelector('.popup_is-opened');

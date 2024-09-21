@@ -17,6 +17,8 @@
 }
 
 .profile__add-button:hover {
+  transform: scale(0.97) translateY(-1px);
+  transition: transform 0.3s ease;
   opacity: 0.6;
 }
 

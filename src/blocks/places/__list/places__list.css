@@ -7,3 +7,34 @@
   margin: 0;
   padding: 0;
 }
+
+.scroll-to-top {
+  position: fixed; 
+  right: 150px;     
+  bottom: 40px;    
+  padding: 10px 20px;
+  background-color: transparent;
+  color: #fff;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  cursor: pointer;
+  opacity: 0;     
+  transition: opacity 0.3s ease; 
+  z-index: 1000;
+  border: 1px solid #fff;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  font-family: inter;
+}
+
+.scroll-to-top:hover {
+  transform: scale(0.97) translateY(-1px);
+  transition: transform 0.3s ease;
+}
+
+.scroll-to-top.visible {
+  opacity: 1;
+}
