@@ -1,4 +1,6 @@
-https://github.com/Morrriarty/mesto-project-ff
+https://github.com/Morrriarty/mesto-project-ff - ссылка на репозиторий.
+
+https://morrriarty.github.io/mesto-project-ff/ - ссылка на сайт.
 
 # Яндекс Практикум, проектная работа №5 "mesto" - Базовая функциональность.
 # Яндекс Практикум, проектная работа №6 "mesto" - Сборка, модульность и модальные окна.
