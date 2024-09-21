@@ -1,26 +1,26 @@
-// Функция для скрытия ошибки валидации
-function hideInputError(formElement, inputElement, config) {
-  const errorElement = formElement.querySelector(`.${config.inputErrorClass}_type_${inputElement.name}`);
-
-  if (errorElement) {
-    inputElement.classList.remove(config.inputErrorClass);
-    errorElement.classList.remove(config.errorClass);
-    errorElement.textContent = '';
-  }
-}
-
-// Функция для отображения ошибки валидации
+// Показать сообщение об ошибке валидации
 function showInputError(formElement, inputElement, errorMessage, config) {
-  const errorElement = formElement.querySelector(`.${config.inputErrorClass}_type_${inputElement.name}`);
-
-  if (errorElement) {
-    inputElement.classList.add(config.inputErrorClass);
-    errorElement.textContent = errorMessage;
-    errorElement.classList.add(config.errorClass);
-  }
+  const errorElement = formElement.querySelector(`.${config.errorClass}_type_${inputElement.name}`);
+  inputElement.classList.add(config.inputErrorClass);
+  errorElement.textContent = errorMessage;
+  errorElement.classList.add(config.errorClassVisible);
 }
 
-// Проверка валидности инпута
+// Скрыть сообщение об ошибке валидации
+function hideInputError(formElement, inputElement, config) {
+  const errorElement = formElement.querySelector(`.${config.errorClass}_type_${inputElement.name}`);
+  
+  if (!errorElement) {
+    console.warn(`Элемент ошибки для поля ${inputElement.name} не найден.`);
+    return;
+  }
+  
+  inputElement.classList.remove(config.inputErrorClass);
+  errorElement.classList.remove(config.errorClassVisible);
+  errorElement.textContent = '';
+}
+
+// Проверка валидности ввода
 function isValid(formElement, inputElement, config) {
   const namePattern = /^[a-zA-Zа-яА-ЯёЁ\s-]+$/;
 
@@ -48,21 +48,21 @@ function isValid(formElement, inputElement, config) {
   return true;
 }
 
-// Стилизация кнопки отправки
+// Стилизация кнопки отправки формы
 function applyButtonStyle(buttonElement, isFormEmpty, isFormValid, config) {
   if (isFormEmpty) {
     buttonElement.classList.add(config.inactiveButtonClass);
-    buttonElement.classList.remove(config.errorClass);
+    buttonElement.classList.remove(config.invalidButtonClass);
   } else if (!isFormValid) {
-    buttonElement.classList.add(config.errorClass);
+    buttonElement.classList.add(config.invalidButtonClass);
     buttonElement.classList.remove(config.inactiveButtonClass);
   } else {
     buttonElement.classList.remove(config.inactiveButtonClass);
-    buttonElement.classList.remove(config.errorClass);
+    buttonElement.classList.remove(config.invalidButtonClass);
   }
 }
 
-// Тогглинг состояния кнопки отправки
+// Включение/выключение состояния кнопки отправки
 export function toggleButtonState(formElement, buttonElement, config) {
   const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
   const isValidForm = inputList.every((input) => input.validity.valid);
