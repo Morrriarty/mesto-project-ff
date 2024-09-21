@@ -37,19 +37,21 @@ const confirmDeletePopup = document.querySelector('.popup_type_confirm-delete');
 let cardToDelete = null;
 const deleteConfirmButton = confirmDeletePopup.querySelector('.popup__button');
 
-// Включение валидации форм
+const scrollButton = document.querySelector('.scroll-to-top');
+
+// Объект конфигурации для валидации
 const validationConfig = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
+  inactiveButtonClass: 'popup__button_disabled',  // Класс для неактивной кнопки
+  errorClass: 'popup__button_invalid',  // Класс для отображения ошибки
+  inputErrorClass: 'popup__input-error',
   errorClass: 'popup__error_visible',
 };
 
 enableValidation(validationConfig);
 
-// Получение данных пользователя и загрузка карточек
 getUserInfo()
   .then(userInfo => {
     profileName.textContent = userInfo.name;
@@ -57,6 +59,7 @@ getUserInfo()
     profileAvatar.style.backgroundImage = `url(${userInfo.avatar})`;
     currentUserId = userInfo._id;
 
+    // Загружаем карточки только после получения информации о текущем пользователе
     getInitialCards()
       .then(cards => {
         cards.forEach(cardElement => {
@@ -71,7 +74,6 @@ getUserInfo()
     console.error(`Ошибка при загрузке информации о пользователе: ${err}`);
   });
 
-// Открытие попапа редактирования профиля
 editProfileButton.addEventListener('click', () => {
   nameInput.value = profileName.textContent;
   descriptionInput.value = profileDescription.textContent;
@@ -84,26 +86,23 @@ editProfileButton.addEventListener('click', () => {
   openPopup(editProfilePopup);
 });
 
-// Открытие попапа добавления новой карточки
 addNewCardButton.addEventListener('click', () => {
   formNewCard.reset();
   clearValidation(formNewCard, validationConfig);
   openPopup(newCardPopup);
 });
 
-// Открытие попапа редактирования аватара
 avatarEditButton.addEventListener('click', () => {
   formEditAvatar.reset();
   clearValidation(formEditAvatar, validationConfig);
   openPopup(avatarEditPopup);
 });
 
-// Сохранение изменений в профиле
 formEditProfile.addEventListener('submit', (event) => {
   event.preventDefault();
 
   const submitButton = formEditProfile.querySelector('.popup__button');
-  submitButton.textContent = 'Сохранение...';
+  submitButton.textContent = 'Сохранение...';  // Меняем текст кнопки на "Сохранение..."
 
   updateUserProfile(nameInput.value, descriptionInput.value)
     .then((updatedUserInfo) => {
@@ -115,11 +114,10 @@ formEditProfile.addEventListener('submit', (event) => {
       console.error(`Ошибка при обновлении профиля: ${err}`);
     })
     .finally(() => {
-      submitButton.textContent = 'Сохранить';
+      submitButton.textContent = 'Сохранить';  // Возвращаем текст кнопки после завершения операции
     });
 });
 
-// Добавление новой карточки
 formNewCard.addEventListener('submit', (event) => {
   event.preventDefault();
 
@@ -129,7 +127,7 @@ formNewCard.addEventListener('submit', (event) => {
   };
 
   const submitButton = formNewCard.querySelector('.popup__button');
-  submitButton.textContent = 'Сохранение...';
+  submitButton.textContent = 'Сохранение...';  // Меняем текст кнопки
 
   addNewCard(newCard.name, newCard.link)
     .then((createdCard) => {
@@ -140,17 +138,16 @@ formNewCard.addEventListener('submit', (event) => {
       console.error(`Ошибка при добавлении карточки: ${err}`);
     })
     .finally(() => {
-      submitButton.textContent = 'Сохранить';
+      submitButton.textContent = 'Сохранить';  // Возвращаем текст кнопки
     });
 });
 
-// Обновление аватара
 formEditAvatar.addEventListener('submit', (event) => {
   event.preventDefault();
 
   const avatarLink = avatarLinkInput.value;
   const submitButton = formEditAvatar.querySelector('.popup__button');
-  submitButton.textContent = 'Сохранение...';
+  submitButton.textContent = 'Сохранение...';  // Меняем текст кнопки
 
   updateAvatar(avatarLink)
     .then((updatedUserInfo) => {
@@ -161,17 +158,15 @@ formEditAvatar.addEventListener('submit', (event) => {
       console.error(`Ошибка при обновлении аватара: ${err}`);
     })
     .finally(() => {
-      submitButton.textContent = 'Сохранить';
+      submitButton.textContent = 'Сохранить';  // Возвращаем текст кнопки
     });
 });
 
-// Отображение карточки
 function renderCard(cardElement) {
   const card = createCard(cardElement, { handleCardClick, currentUserId, openConfirmDeletePopup });
   cardsContainer.prepend(card);
 }
 
-// Закрытие попапов
 closeButtons.forEach((button) => {
   button.addEventListener('click', (event) => {
     const popup = event.target.closest('.popup');
@@ -179,7 +174,6 @@ closeButtons.forEach((button) => {
   });
 });
 
-// Открытие попапа с изображением
 function handleCardClick(name, link) {
   const popupImage = imagePopup.querySelector('.popup__image');
   const popupCaption = imagePopup.querySelector('.popup__caption');
@@ -189,13 +183,18 @@ function handleCardClick(name, link) {
   openPopup(imagePopup);
 }
 
-// Открытие попапа подтверждения удаления карточки
+// Закрытие попапов по клику на оверлей
+document.addEventListener('mousedown', (event) => {
+  if (event.target.classList.contains('popup') && !event.target.closest('.popup__content')) {
+    closePopup(event.target);
+  }
+});
+
 function openConfirmDeletePopup(cardElement, cardId) {
   cardToDelete = { cardElement, cardId };
   openPopup(confirmDeletePopup);
 }
 
-// Удаление карточки после подтверждения
 confirmDeletePopup.addEventListener('submit', (event) => {
   event.preventDefault();
 
@@ -203,7 +202,7 @@ confirmDeletePopup.addEventListener('submit', (event) => {
     deleteConfirmButton.textContent = 'Удаление...';
     deleteCardFromServer(cardToDelete.cardId)
       .then(() => {
-        cardToDelete.cardElement.remove();
+        cardToDelete.cardElement.remove(); // Удаляем карточку с экрана
         cardToDelete = null;
         closePopup(confirmDeletePopup);
       })
@@ -216,7 +215,7 @@ confirmDeletePopup.addEventListener('submit', (event) => {
   }
 });
 
-// Прокрутка страницы наверх
+// Функция для прокрутки наверх
 function scrollToTop() {
   window.scrollTo({
     top: 0,
@@ -224,10 +223,10 @@ function scrollToTop() {
   });
 }
 
-// Показ кнопки при скролле страницы
+scrollButton.addEventListener('click', scrollToTop);
+
+// Показ кнопки при прокрутке страницы
 window.addEventListener('scroll', function() {
-  const scrollButton = document.querySelector('.scroll-to-top');
-  
   if (window.scrollY > 300) {
     scrollButton.classList.add('visible');
   } else {
@@ -235,9 +234,6 @@ window.addEventListener('scroll', function() {
   }
 });
 
-// Обработка события загрузки DOM
 document.addEventListener('DOMContentLoaded', function() {
-  const scrollButton = document.querySelector('.scroll-to-top');
-
   scrollButton.addEventListener('click', scrollToTop);
 });

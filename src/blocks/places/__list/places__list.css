@@ -10,7 +10,7 @@
 
 .scroll-to-top {
   position: fixed; 
-  right: 150px;     
+  right: 165px;     
   bottom: 40px;    
   padding: 10px 20px;
   background-color: transparent;
@@ -37,11 +37,4 @@
 
 .scroll-to-top.visible {
   opacity: 1;
-}
-
-@media screen and (max-width: 1140px) {
-  .scroll-to-top { 
-    bottom: 40px; 
-    right: 185px;
-  }
 }

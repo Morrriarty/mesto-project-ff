@@ -1,6 +1,5 @@
-import { deleteCardFromServer, addLike, removeLike } from './api.js';
+import { deleteCardFromServer, addLike, removeLike } from './api.js'; // Добавляем функции для работы с лайками
 
-// Функция для переключения лайка
 export function toggleLike(event, cardId, likeCountElement, isLiked) {
   const likeButton = event.target;
 
@@ -9,6 +8,7 @@ export function toggleLike(event, cardId, likeCountElement, isLiked) {
       .then((updatedCard) => {
         likeButton.classList.remove('card__like-button_is-active');
         likeCountElement.textContent = updatedCard.likes.length;
+        isLiked = false; // Обновляем состояние лайка
       })
       .catch((err) => {
         console.error(`Ошибка при снятии лайка: ${err}`);
@@ -18,6 +18,7 @@ export function toggleLike(event, cardId, likeCountElement, isLiked) {
       .then((updatedCard) => {
         likeButton.classList.add('card__like-button_is-active');
         likeCountElement.textContent = updatedCard.likes.length;
+        isLiked = true; // Обновляем состояние лайка
       })
       .catch((err) => {
         console.error(`Ошибка при постановке лайка: ${err}`);
@@ -50,15 +51,18 @@ export function createCard(element, { handleCardClick, currentUserId, openConfir
   cardImage.alt = element.name;
   likeCount.textContent = element.likes.length;
 
+  // Показываем кнопку удаления только для карточек, созданных текущим пользователем
   if (element.owner && element.owner._id === currentUserId) {
     deleteButton.style.display = 'block';
     deleteButton.addEventListener('click', () => {
+      // Открываем попап с подтверждением удаления через переданную функцию
       openConfirmDeletePopup(cardElement, element._id);
     });
   } else {
     deleteButton.style.display = 'none';
   }
 
+  // Обработчик клика по изображению
   cardImage.addEventListener('click', () => {
     handleCardClick(element.name, element.link);
   });
@@ -69,8 +73,11 @@ export function createCard(element, { handleCardClick, currentUserId, openConfir
   }
 
   likeButton.addEventListener('click', (event) => {
-    toggleLike(event, element._id, likeCount, likeButton.classList.contains('card__like-button_is-active'));
+    const isLiked = likeButton.classList.contains('card__like-button_is-active');
+    toggleLike(event, element._id, likeCount, isLiked);
   });
 
   return cardElement;
 }
+
+

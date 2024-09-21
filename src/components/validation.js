@@ -1,20 +1,26 @@
-// Показать сообщение об ошибке валидации
-function showInputError(formElement, inputElement, errorMessage, config) {
-  const errorElement = formElement.querySelector(`.popup__input-error_type_${inputElement.name}`);
-  inputElement.classList.add(config.inputErrorClass);
-  errorElement.textContent = errorMessage;
-  errorElement.classList.add(config.errorClass);
-}
-
-// Скрыть сообщение об ошибке валидации
+// Функция для скрытия ошибки валидации
 function hideInputError(formElement, inputElement, config) {
-  const errorElement = formElement.querySelector(`.popup__input-error_type_${inputElement.name}`);
-  inputElement.classList.remove(config.inputErrorClass);
-  errorElement.classList.remove(config.errorClass);
-  errorElement.textContent = '';
+  const errorElement = formElement.querySelector(`.${config.inputErrorClass}_type_${inputElement.name}`);
+
+  if (errorElement) {
+    inputElement.classList.remove(config.inputErrorClass);
+    errorElement.classList.remove(config.errorClass);
+    errorElement.textContent = '';
+  }
 }
 
-// Проверка валидности ввода
+// Функция для отображения ошибки валидации
+function showInputError(formElement, inputElement, errorMessage, config) {
+  const errorElement = formElement.querySelector(`.${config.inputErrorClass}_type_${inputElement.name}`);
+
+  if (errorElement) {
+    inputElement.classList.add(config.inputErrorClass);
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add(config.errorClass);
+  }
+}
+
+// Проверка валидности инпута
 function isValid(formElement, inputElement, config) {
   const namePattern = /^[a-zA-Zа-яА-ЯёЁ\s-]+$/;
 
@@ -42,28 +48,28 @@ function isValid(formElement, inputElement, config) {
   return true;
 }
 
-// Стилизация кнопки отправки формы
-function applyButtonStyle(buttonElement, isFormEmpty, isFormValid) {
+// Стилизация кнопки отправки
+function applyButtonStyle(buttonElement, isFormEmpty, isFormValid, config) {
   if (isFormEmpty) {
-    buttonElement.classList.add('popup__button_disabled');
-    buttonElement.classList.remove('popup__button_invalid');
+    buttonElement.classList.add(config.inactiveButtonClass);
+    buttonElement.classList.remove(config.errorClass);
   } else if (!isFormValid) {
-    buttonElement.classList.add('popup__button_invalid');
-    buttonElement.classList.remove('popup__button_disabled');
+    buttonElement.classList.add(config.errorClass);
+    buttonElement.classList.remove(config.inactiveButtonClass);
   } else {
-    buttonElement.classList.remove('popup__button_disabled');
-    buttonElement.classList.remove('popup__button_invalid');
+    buttonElement.classList.remove(config.inactiveButtonClass);
+    buttonElement.classList.remove(config.errorClass);
   }
 }
 
-// Включение/выключение состояния кнопки отправки
+// Тогглинг состояния кнопки отправки
 export function toggleButtonState(formElement, buttonElement, config) {
   const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
   const isValidForm = inputList.every((input) => input.validity.valid);
   const isFormEmpty = inputList.every((input) => input.value.trim() === '');
 
   buttonElement.disabled = !isValidForm;
-  applyButtonStyle(buttonElement, isFormEmpty, isValidForm);
+  applyButtonStyle(buttonElement, isFormEmpty, isValidForm, config);
 }
 
 // Установка слушателей событий на форму
@@ -94,5 +100,5 @@ export function clearValidation(formElement, config) {
   });
   const buttonElement = formElement.querySelector(config.submitButtonSelector);
   buttonElement.disabled = true;
-  applyButtonStyle(buttonElement, true, false);
+  applyButtonStyle(buttonElement, true, false, config);
 }
