@@ -15,7 +15,7 @@ export function closePopup(popup) {
   popup.classList.remove('popup_is-opened');
   popup.classList.add('popup_is-animated');
   document.removeEventListener('keydown', closePopupOnEsc);
-  popup.removeEventListener('mousedown', closePopupOnOverlay); // Убираем обработчик клика на оверлей при закрытии попапа
+  popup.removeEventListener('mousedown', closePopupOnOverlay);
 }
 
 // Функция для закрытия попапа при нажатии клавиши Esc

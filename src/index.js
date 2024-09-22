@@ -42,12 +42,15 @@ const avatarLinkInput = formEditAvatar.elements['avatar-link'];
 let cardToDelete = null;
 const deleteConfirmButton = confirmDeletePopup.querySelector('.popup__button');
 
+const scrollButton = document.querySelector('.scroll-to-top')
+
 // Включение валидации форм
 const validationConfig = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__button',
   inactiveButtonClass: 'popup__button_disabled',
+  invalidButtonClass: 'popup__button_invalid',
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__error_visible',
 };
@@ -99,9 +102,14 @@ avatarEditButton.addEventListener('click', () => {
 // Сохранение изменений в профиле
 formEditProfile.addEventListener('submit', (event) => {
   event.preventDefault();
-  
+
   const submitButton = event.submitter;
   submitButton.textContent = 'Сохранение...';
+
+  if (!formEditProfile.checkValidity()) {
+    // Если форма невалидна, не продолжаем выполнение кода
+    return;
+  }
 
   updateUserProfile(nameInput.value, descriptionInput.value)
     .then((updatedUserInfo) => {
@@ -124,6 +132,11 @@ formNewCard.addEventListener('submit', (event) => {
   const submitButton = event.submitter;
   submitButton.textContent = 'Сохранение...';
 
+  if (!formNewCard.checkValidity()) {
+    // Если форма невалидна, не продолжаем выполнение кода
+    return;
+  }
+
   addNewCard(placeNameInput.value, linkInput.value)
     .then((createdCard) => {
       renderCard(createdCard);
@@ -143,6 +156,11 @@ formEditAvatar.addEventListener('submit', (event) => {
 
   const submitButton = event.submitter;
   submitButton.textContent = 'Сохранение...';
+
+  if (!formEditAvatar.checkValidity()) {
+    // Если форма невалидна, не продолжаем выполнение кода
+    return;
+  }
 
   updateAvatar(avatarLinkInput.value)
     .then((updatedUserInfo) => {
@@ -206,7 +224,6 @@ confirmDeletePopup.addEventListener('submit', (event) => {
   }
 });
 
-// JavaScript для кнопки скроллинга наверх
 
 // Функция для плавного скроллинга наверх
 function scrollToTop() {
@@ -218,7 +235,7 @@ function scrollToTop() {
 
 // Обработка события прокрутки страницы для отображения кнопки
 window.addEventListener('scroll', function() {
-  const scrollButton = document.querySelector('.scroll-to-top');
+  scrollButton;
   
   if (window.scrollY > 300) {
     scrollButton.classList.add('visible');
@@ -228,7 +245,7 @@ window.addEventListener('scroll', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-  const scrollButton = document.querySelector('.scroll-to-top');
+  scrollButton;
   
   scrollButton.addEventListener('click', scrollToTop);
 });
